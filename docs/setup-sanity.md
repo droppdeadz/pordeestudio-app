@@ -103,9 +103,9 @@ This is needed if you want to access draft/unpublished content at build time. Fo
 2. Fill in the initial content:
    - **Studio Name**: Pordee Studio
    - **Tagline (EN)**: CAPTURE WHAT YOU FEEL
-   - **Tagline (TH)**: CAPTURE WHAT YOU FEEL
+   - **Tagline (TH)**: บันทึกทุกความรู้สึก
    - **Description (EN)**: Explore the architect's pure essence and deliver through the films.
-   - **Description (TH)**: สำรวจแก่นแท้ของสถาปนิก และถ่ายทอดผ่านภาพยนตร์
+   - **Description (TH)**: สำรวจตัวตนและเจตจำนงที่แท้จริงของผู้ออกแบบ เพื่อส่งต่อเรื่องราวเหล่านั้นผ่านแผ่นฟิล์ม
    - **Email**: pordeestudio.official@gmail.com
    - **Phone**: +66 64 954 6291
    - **Instagram**: https://instagram.com/pordee.studio.official
