@@ -49,8 +49,21 @@
       "invalidEmail": "กรุณากรอกอีเมลที่ถูกต้อง"
     }
   },
+  "blog": {
+    "title": "บล็อก",
+    "readMore": "อ่านเพิ่มเติม",
+    "backToBlog": "กลับสู่บล็อก",
+    "publishedOn": "เผยแพร่เมื่อ",
+    "noPosts": "ยังไม่มีบทความ",
+    "tags": "แท็ก"
+  },
   "footer": {
     "copyright": "Copyright \u00a9 I WORK THEREFORE I AM CO.,LTD. Chiang Mai, Thailand"
+  },
+  "notFound": {
+    "title": "ไม่พบหน้าที่ค้นหา",
+    "message": "หน้าที่คุณกำลังค้นหาไม่มีอยู่หรือได้ถูกย้ายไปแล้ว",
+    "backHome": "กลับสู่หน้าหลัก"
   },
   "language": {
     "toggle": "EN"

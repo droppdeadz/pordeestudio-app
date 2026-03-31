@@ -18,7 +18,7 @@ const settings = await getSiteSettings();
   <section class="px-6 py-16 max-w-4xl mx-auto">
     <div class="md:flex md:gap-16">
       {/* Contact Info */}
-      <div class="md:w-1/3 mb-12 md:mb-0">
+      <div class="md:w-1/3 mb-12 md:mb-0" data-animate>
         <h1 class="text-2xl font-light tracking-wider mb-8">
           {t('contact.title')}
         </h1>
@@ -53,7 +53,7 @@ const settings = await getSiteSettings();
       </div>
 
       {/* Contact Form */}
-      <div class="md:flex-1">
+      <div class="md:flex-1" data-animate>
         <ContactForm locale={locale} />
       </div>
     </div>

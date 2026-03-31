@@ -21,7 +21,7 @@ const aboutText = settings?.aboutText?.[locale] ?? '';
   <section class="px-6 py-16 max-w-2xl mx-auto">
     {/* Team Photo */}
     {aboutImageSrc && (
-      <div class="flex justify-center mb-12">
+      <div class="flex justify-center mb-12" data-animate>
         <img
           src={aboutImageSrc}
           alt={t('about.title')}
@@ -33,14 +33,14 @@ const aboutText = settings?.aboutText?.[locale] ?? '';
 
     {/* About Text */}
     {aboutText && (
-      <div class="text-neutral-300 leading-relaxed space-y-6 whitespace-pre-line">
+      <div class="text-neutral-300 leading-relaxed space-y-6 whitespace-pre-line" data-animate>
         {aboutText}
       </div>
     )}
 
     {/* Philosophy */}
     {settings?.tagline?.[locale] && (
-      <div class="mt-16 pt-12 border-t border-neutral-900">
+      <div class="mt-16 pt-12 border-t border-neutral-900" data-animate>
         <p class="text-xs text-neutral-500 uppercase tracking-widest mb-4">
           {t('about.philosophy')}
         </p>

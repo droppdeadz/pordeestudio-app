@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getTranslations, getLocalizedPath } from '../lib/i18n';
+import type { Locale } from '../lib/i18n';
+
+// Detect locale from the request URL path
+const pathname = Astro.url.pathname;
+const locale: Locale = pathname.startsWith('/th') ? 'th' : 'en';
+const t = getTranslations(locale);
+---
+
+<BaseLayout locale={locale} title={`${t('notFound.title')} — ${t('site.title')}`}>
+  <section class="flex flex-col items-center justify-center px-6 py-32 text-center">
+    <p class="text-7xl md:text-9xl font-light text-neutral-800 mb-6">404</p>
+    <h1 class="text-xl md:text-2xl font-light tracking-wider text-white mb-4">
+      {t('notFound.title')}
+    </h1>
+    <p class="text-neutral-400 max-w-md mb-10">
+      {t('notFound.message')}
+    </p>
+    <a
+      href={getLocalizedPath('/', locale)}
+      class="text-sm text-neutral-400 hover:text-white transition-colors border border-neutral-800 px-6 py-3 rounded-sm hover:border-neutral-600"
+    >
+      &larr; {t('notFound.backHome')}
+    </a>
+  </section>
+</BaseLayout>

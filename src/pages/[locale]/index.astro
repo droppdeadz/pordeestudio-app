@@ -19,9 +19,18 @@ const [settings, featuredProjects] = await Promise.all([
 const heroSrc = settings?.aboutImage
   ? urlFor(settings.aboutImage).width(1920).auto('format').url()
   : null;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Pordee Studio',
+  url: Astro.site?.toString() ?? '',
+  description: t('site.description'),
+  inLanguage: locale === 'th' ? 'th-TH' : 'en-US',
+};
 ---
 
-<BaseLayout locale={locale} title={`${t('site.title')} — ${t('site.tagline')}`} description={t('site.description')}>
+<BaseLayout locale={locale} title={`${t('site.title')} — ${t('site.tagline')}`} description={t('site.description')} ogImage={heroSrc ?? undefined} jsonLd={jsonLd}>
   {/* Hero Section */}
   {heroSrc ? (
     <section class="w-full">
@@ -51,9 +60,11 @@ const heroSrc = settings?.aboutImage
           {t('home.viewAllWork')} &rarr;
         </a>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" data-animate-stagger>
         {featuredProjects.map((project) => (
-          <ProjectCard project={project} locale={locale} />
+          <div data-animate>
+            <ProjectCard project={project} locale={locale} />
+          </div>
         ))}
       </div>
     </section>

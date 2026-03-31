@@ -106,6 +106,14 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
   );
 }
 
+export async function getBlogPostsFull(): Promise<BlogPost[]> {
+  return sanityClient.fetch(
+    `*[_type == "blogPost"] | order(date desc) {
+      _id, slug, title, body, thumbnail, date, tags, excerpt
+    }`
+  );
+}
+
 export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
   return sanityClient.fetch(
     `*[_type == "blogPost" && slug.current == $slug][0] {

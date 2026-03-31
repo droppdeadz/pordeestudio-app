@@ -26,9 +26,9 @@ const years = [...new Set(projects.map((p) => p.year))].sort((a, b) => b - a);
     )}
 
     {projects.length > 0 ? (
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" data-animate-stagger>
         {projects.map((project) => (
-          <div data-year={String(project.year)}>
+          <div data-year={String(project.year)} data-animate>
             <ProjectCard project={project} locale={locale} />
           </div>
         ))}

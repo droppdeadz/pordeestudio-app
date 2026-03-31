@@ -1,0 +1,52 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  locale: string;
+  ogImage?: string;
+  ogType?: string;
+  jsonLd?: Record<string, unknown>;
+  canonicalUrl?: string;
+}
+
+const {
+  title,
+  description,
+  locale,
+  ogImage = '/og-default.png',
+  ogType = 'website',
+  jsonLd,
+  canonicalUrl,
+} = Astro.props;
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const canonical = canonicalUrl ?? `${siteUrl}${Astro.url.pathname}`;
+const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`;
+---
+
+{/* Canonical */}
+<link rel="canonical" href={canonical} />
+
+{/* Open Graph */}
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:type" content={ogType} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImageUrl} />
+<meta property="og:locale" content={locale === 'th' ? 'th_TH' : 'en_US'} />
+<meta property="og:site_name" content="Pordee Studio" />
+
+{/* Twitter Card */}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageUrl} />
+
+{/* Alternate locale */}
+<link rel="alternate" hreflang={locale === 'th' ? 'en' : 'th'} href={`${siteUrl}/${locale === 'th' ? 'en' : 'th'}${Astro.url.pathname.replace(/^\/(en|th)/, '')}`} />
+<link rel="alternate" hreflang="x-default" href={`${siteUrl}/en${Astro.url.pathname.replace(/^\/(en|th)/, '')}`} />
+
+{/* JSON-LD */}
+{jsonLd && (
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+)}

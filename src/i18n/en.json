@@ -49,8 +49,21 @@
       "invalidEmail": "Please enter a valid email address."
     }
   },
+  "blog": {
+    "title": "Blog",
+    "readMore": "Read More",
+    "backToBlog": "Back to Blog",
+    "publishedOn": "Published on",
+    "noPosts": "No posts yet.",
+    "tags": "Tags"
+  },
   "footer": {
     "copyright": "Copyright \u00a9 I WORK THEREFORE I AM CO.,LTD. Chiang Mai, Thailand"
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "message": "The page you're looking for doesn't exist or has been moved.",
+    "backHome": "Back to Home"
   },
   "language": {
     "toggle": "TH"
