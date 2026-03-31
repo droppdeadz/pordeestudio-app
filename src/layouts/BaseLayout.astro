@@ -1,8 +1,11 @@
 ---
 import '../styles/globals.css';
+import { ClientRouter } from 'astro:transitions';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { getTranslations } from '../lib/i18n';
+import { getSiteSettings } from '../lib/sanity';
+import type { SiteSettings } from '../lib/sanity';
 
 interface Props {
   title?: string;
@@ -13,6 +16,7 @@ interface Props {
 const { description = '', locale } = Astro.props;
 const t = getTranslations(locale);
 const title = Astro.props.title ?? t('site.title');
+const settings = await getSiteSettings();
 ---
 
 <html lang={locale}>
@@ -28,12 +32,13 @@ const title = Astro.props.title ?? t('site.title');
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <ClientRouter />
   </head>
   <body class="bg-black text-white font-sans antialiased min-h-screen flex flex-col">
-    <Header locale={locale} />
-    <main class="flex-1">
+    <Header locale={locale} transition:animate="none" />
+    <main class="flex-1" transition:animate="fade">
       <slot />
     </main>
-    <Footer locale={locale} />
+    <Footer locale={locale} settings={settings} transition:animate="none" />
   </body>
 </html>

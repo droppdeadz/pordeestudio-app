@@ -1,6 +1,7 @@
 ---
 import { getTranslations, getLocalizedPath } from '../lib/i18n';
 import LanguageToggle from './LanguageToggle.astro';
+import MobileMenu from './MobileMenu.astro';
 
 interface Props {
   locale: string;
@@ -11,7 +12,7 @@ const t = getTranslations(locale);
 ---
 
 <header class="px-6 py-5 flex items-center justify-between">
-  <a href={getLocalizedPath('/', locale)}>
+  <a href={getLocalizedPath('/', locale)} transition:name="site-logo">
     <img src="/logo.png" alt={t('site.title')} class="h-5" />
   </a>
 
@@ -31,9 +32,17 @@ const t = getTranslations(locale);
     <LanguageToggle locale={locale} />
   </nav>
 
-  <button class="md:hidden text-white" aria-label="Menu">
+  <button
+    id="mobile-menu-btn"
+    class="md:hidden text-white"
+    aria-label="Menu"
+    aria-expanded="false"
+    aria-controls="mobile-menu"
+  >
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16" />
     </svg>
   </button>
 </header>
+
+<MobileMenu locale={locale} />

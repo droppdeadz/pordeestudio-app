@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ProjectCard from '../../../components/ProjectCard.astro';
+import YouTubeEmbed from '../../../components/YouTubeEmbed.astro';
+import { getTranslations, getLocalizedPath, locales, type Locale } from '../../../lib/i18n';
+import { getProjects, getRelatedProjects } from '../../../lib/sanity';
+import type { Project } from '../../../lib/sanity';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return locales.flatMap((locale) =>
+    projects.map((project) => ({
+      params: { locale, slug: project.slug.current },
+      props: { project },
+    }))
+  );
+}
+
+const locale = Astro.params.locale as Locale;
+const t = getTranslations(locale);
+const { project } = Astro.props as { project: Project };
+
+const relatedProjects = await getRelatedProjects(project._id, project.year);
+---
+
+<BaseLayout
+  locale={locale}
+  title={`${project.title[locale]} — ${t('site.title')}`}
+  description={project.description?.[locale] ?? ''}
+>
+  {/* YouTube Player */}
+  <section class="w-full max-w-5xl mx-auto px-6 pt-8">
+    <YouTubeEmbed videoUrl={project.videoUrl} title={project.title[locale]} />
+  </section>
+
+  {/* Project Info */}
+  <section class="max-w-5xl mx-auto px-6 py-12">
+    <div class="md:flex md:gap-16">
+      {/* Left: Title & Description */}
+      <div class="md:flex-1">
+        <h1 class="text-2xl md:text-3xl font-light tracking-wider mb-6">
+          {project.title[locale]}
+        </h1>
+        {project.description?.[locale] && (
+          <p class="text-neutral-300 leading-relaxed whitespace-pre-line">
+            {project.description[locale]}
+          </p>
+        )}
+      </div>
+
+      {/* Right: Metadata */}
+      <div class="mt-8 md:mt-0 md:w-64 space-y-4 text-sm">
+        <div>
+          <span class="text-neutral-500">{t('project.year')}</span>
+          <p class="text-white">{project.year}</p>
+        </div>
+        {project.duration && (
+          <div>
+            <span class="text-neutral-500">{t('project.duration')}</span>
+            <p class="text-white">{project.duration}</p>
+          </div>
+        )}
+        {project.client && (
+          <div>
+            <span class="text-neutral-500">{t('project.client')}</span>
+            <p class="text-white">{project.client}</p>
+          </div>
+        )}
+        {project.architect && (
+          <div>
+            <span class="text-neutral-500">{t('project.architect')}</span>
+            <p class="text-white">{project.architect}</p>
+          </div>
+        )}
+      </div>
+    </div>
+
+    {/* Back link */}
+    <div class="mt-12">
+      <a
+        href={getLocalizedPath('/work', locale)}
+        class="text-sm text-neutral-400 hover:text-white transition-colors"
+      >
+        &larr; {t('project.backToWork')}
+      </a>
+    </div>
+  </section>
+
+  {/* Related Projects */}
+  {relatedProjects.length > 0 && (
+    <section class="max-w-5xl mx-auto px-6 pb-24">
+      <h2 class="text-lg font-light tracking-wider mb-8">
+        {t('project.relatedProjects')}
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {relatedProjects.map((related) => (
+          <ProjectCard project={related} locale={locale} size="small" />
+        ))}
+      </div>
+    </section>
+  )}
+</BaseLayout>

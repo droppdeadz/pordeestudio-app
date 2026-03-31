@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getTranslations, locales, type Locale } from '../../lib/i18n';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { getTranslations, getLocalizedPath, locales, type Locale } from '../../lib/i18n';
+import { getFeaturedProjects, getSiteSettings, urlFor } from '../../lib/sanity';
 
 export function getStaticPaths() {
   return locales.map((locale) => ({ params: { locale } }));
@@ -8,15 +10,52 @@ export function getStaticPaths() {
 
 const locale = Astro.params.locale as Locale;
 const t = getTranslations(locale);
+
+const [settings, featuredProjects] = await Promise.all([
+  getSiteSettings(),
+  getFeaturedProjects(),
+]);
+
+const heroSrc = settings?.aboutImage
+  ? urlFor(settings.aboutImage).width(1920).auto('format').url()
+  : null;
 ---
 
 <BaseLayout locale={locale} title={`${t('site.title')} — ${t('site.tagline')}`} description={t('site.description')}>
-  <section class="min-h-[80vh] flex flex-col items-center justify-center px-6 text-center">
-    <h1 class="text-4xl md:text-6xl font-light tracking-wider mb-6">
-      {t('site.tagline')}
-    </h1>
-    <p class="text-neutral-400 text-lg max-w-lg">
-      {t('site.description')}
-    </p>
-  </section>
+  {/* Hero Section */}
+  {heroSrc ? (
+    <section class="w-full">
+      <div class="w-full aspect-video md:aspect-[21/9] overflow-hidden">
+        <img
+          src={heroSrc}
+          alt={t('site.title')}
+          class="w-full h-full object-cover"
+        />
+      </div>
+    </section>
+  ) : (
+    <section class="w-full h-[60vh] bg-neutral-950" />
+  )}
+
+  {/* Featured Projects */}
+  {featuredProjects.length > 0 && (
+    <section class="px-6 pb-24 max-w-6xl mx-auto">
+      <div class="flex items-center justify-between mb-10">
+        <h2 class="text-lg font-light tracking-wider">
+          {t('home.featuredWork')}
+        </h2>
+        <a
+          href={getLocalizedPath('/work', locale)}
+          class="text-sm text-neutral-400 hover:text-white transition-colors"
+        >
+          {t('home.viewAllWork')} &rarr;
+        </a>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {featuredProjects.map((project) => (
+          <ProjectCard project={project} locale={locale} />
+        ))}
+      </div>
+    </section>
+  )}
 </BaseLayout>

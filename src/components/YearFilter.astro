@@ -1,0 +1,63 @@
+---
+import { getTranslations } from '../lib/i18n';
+
+interface Props {
+  years: number[];
+  locale: string;
+}
+
+const { years, locale } = Astro.props;
+const t = getTranslations(locale);
+---
+
+<div class="flex gap-2 mb-10 flex-wrap" id="year-filter">
+  <button
+    data-filter="all"
+    class="year-tab px-4 py-2 text-sm border border-neutral-700 rounded-sm transition-colors text-white bg-white/10"
+  >
+    {t('work.allYears')}
+  </button>
+  {years.map((year) => (
+    <button
+      data-filter={String(year)}
+      class="year-tab px-4 py-2 text-sm border border-neutral-700 rounded-sm transition-colors text-neutral-400 hover:text-white"
+    >
+      {year}
+    </button>
+  ))}
+</div>
+
+<script>
+  function setupYearFilter() {
+    const tabs = document.querySelectorAll<HTMLButtonElement>('.year-tab');
+    const cards = document.querySelectorAll<HTMLElement>('[data-year]');
+
+    if (tabs.length === 0) return;
+
+    function setFilter(value: string) {
+      tabs.forEach((tab) => {
+        const isActive = tab.dataset.filter === value;
+        tab.classList.toggle('text-white', isActive);
+        tab.classList.toggle('bg-white/10', isActive);
+        tab.classList.toggle('text-neutral-400', !isActive);
+      });
+      cards.forEach((card) => {
+        const show = value === 'all' || card.dataset.year === value;
+        card.style.display = show ? '' : 'none';
+      });
+      sessionStorage.setItem('yearFilter', value);
+    }
+
+    const saved = sessionStorage.getItem('yearFilter') ?? 'all';
+    setFilter(saved);
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        setFilter(tab.dataset.filter ?? 'all');
+      });
+    });
+  }
+
+  setupYearFilter();
+  document.addEventListener('astro:after-swap', setupYearFilter);
+</script>

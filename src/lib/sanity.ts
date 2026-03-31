@@ -6,7 +6,7 @@ export const sanityClient = createClient({
   projectId: import.meta.env.PUBLIC_SANITY_PROJECT_ID,
   dataset: import.meta.env.PUBLIC_SANITY_DATASET || 'production',
   apiVersion: '2024-01-01',
-  useCdn: import.meta.env.DEV,
+  useCdn: !import.meta.env.DEV,
 });
 
 const builder = imageUrlBuilder(sanityClient);
@@ -26,7 +26,7 @@ export interface Project {
   _id: string;
   slug: { current: string };
   title: BilingualField;
-  description: BilingualField;
+  description?: BilingualField;
   year: number;
   thumbnail: SanityImageSource;
   videoUrl: string;
@@ -112,6 +112,20 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
       _id, slug, title, body, thumbnail, date, tags, excerpt
     }`,
     { slug }
+  );
+}
+
+export async function getRelatedProjects(
+  currentId: string,
+  year: number,
+  limit = 3
+): Promise<Project[]> {
+  return sanityClient.fetch(
+    `*[_type == "project" && year == $year && _id != $currentId] | order(order asc) [0...$limit] {
+      _id, slug, title, description, year, thumbnail,
+      videoUrl, duration, client, architect, tags, featured, order
+    }`,
+    { currentId, year, limit }
   );
 }
 

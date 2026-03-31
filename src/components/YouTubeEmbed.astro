@@ -1,0 +1,32 @@
+---
+interface Props {
+  videoUrl: string;
+  title: string;
+  fallbackText?: string;
+}
+
+const { videoUrl, title, fallbackText = '' } = Astro.props;
+
+function extractVideoId(url: string): string | null {
+  const match = url.match(/(?:v=|youtu\.be\/)([^&\s]+)/);
+  return match?.[1] ?? null;
+}
+
+const videoId = extractVideoId(videoUrl);
+---
+
+<div class="relative w-full aspect-video bg-neutral-950 rounded-sm overflow-hidden">
+  {videoId ? (
+    <iframe
+      src={`https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&autoplay=1`}
+      title={title}
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+      class="absolute inset-0 w-full h-full"
+    />
+  ) : (
+    <p class="text-neutral-500 text-sm flex items-center justify-center h-full">
+      {fallbackText}
+    </p>
+  )}
+</div>

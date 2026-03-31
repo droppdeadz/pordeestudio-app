@@ -10,6 +10,45 @@
     "blog": "Blog",
     "contact": "Contact"
   },
+  "home": {
+    "featuredWork": "Featured Work",
+    "viewAllWork": "View All Work"
+  },
+  "work": {
+    "title": "Work",
+    "allYears": "All",
+    "noProjects": "No projects found."
+  },
+  "project": {
+    "year": "Year",
+    "duration": "Duration",
+    "client": "Client",
+    "architect": "Architect",
+    "relatedProjects": "Related Projects",
+    "backToWork": "Back to Work"
+  },
+  "about": {
+    "title": "About",
+    "philosophy": "Our Philosophy"
+  },
+  "contact": {
+    "title": "Contact",
+    "email": "Email",
+    "phone": "Phone",
+    "followUs": "Follow Us",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "subject": "Subject",
+      "message": "Message",
+      "submit": "Send Message",
+      "sending": "Sending...",
+      "success": "Your message has been sent. We'll be in touch soon.",
+      "error": "Something went wrong. Please try again or email us directly.",
+      "required": "This field is required.",
+      "invalidEmail": "Please enter a valid email address."
+    }
+  },
   "footer": {
     "copyright": "Copyright \u00a9 I WORK THEREFORE I AM CO.,LTD. Chiang Mai, Thailand"
   },

@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getTranslations, locales, type Locale } from '../../lib/i18n';
+import { getSiteSettings, urlFor } from '../../lib/sanity';
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+const t = getTranslations(locale);
+const settings = await getSiteSettings();
+
+const aboutImageSrc = settings?.aboutImage
+  ? urlFor(settings.aboutImage).width(800).auto('format').url()
+  : null;
+const aboutText = settings?.aboutText?.[locale] ?? '';
+---
+
+<BaseLayout locale={locale} title={`${t('about.title')} — ${t('site.title')}`}>
+  <section class="px-6 py-16 max-w-2xl mx-auto">
+    {/* Team Photo */}
+    {aboutImageSrc && (
+      <div class="flex justify-center mb-12">
+        <img
+          src={aboutImageSrc}
+          alt={t('about.title')}
+          class="max-w-sm w-full grayscale"
+          loading="lazy"
+        />
+      </div>
+    )}
+
+    {/* About Text */}
+    {aboutText && (
+      <div class="text-neutral-300 leading-relaxed space-y-6 whitespace-pre-line">
+        {aboutText}
+      </div>
+    )}
+
+    {/* Philosophy */}
+    {settings?.tagline?.[locale] && (
+      <div class="mt-16 pt-12 border-t border-neutral-900">
+        <p class="text-xs text-neutral-500 uppercase tracking-widest mb-4">
+          {t('about.philosophy')}
+        </p>
+        <blockquote class="text-xl md:text-2xl font-light tracking-wider italic text-neutral-200">
+          "{settings.tagline[locale]}"
+        </blockquote>
+      </div>
+    )}
+  </section>
+</BaseLayout>

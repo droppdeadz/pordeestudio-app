@@ -1,0 +1,147 @@
+---
+import { getTranslations } from '../lib/i18n';
+
+interface Props {
+  locale: string;
+}
+
+const { locale } = Astro.props;
+const t = getTranslations(locale);
+---
+
+<form
+  id="contact-form"
+  novalidate
+  class="space-y-6"
+  data-required-msg={t('contact.form.required')}
+  data-email-msg={t('contact.form.invalidEmail')}
+  data-sending-msg={t('contact.form.sending')}
+  data-submit-msg={t('contact.form.submit')}
+>
+  <div>
+    <label for="contact-name" class="block text-sm text-neutral-300 mb-2">
+      {t('contact.form.name')}
+    </label>
+    <input
+      type="text"
+      id="contact-name"
+      name="name"
+      required
+      class="w-full bg-neutral-900 border border-neutral-700 rounded-sm px-4 py-3 text-white text-sm placeholder-neutral-500 focus:outline-none focus:border-neutral-500 transition-colors"
+    />
+    <p class="field-error text-red-400 text-xs mt-1 hidden"></p>
+  </div>
+
+  <div>
+    <label for="contact-email" class="block text-sm text-neutral-300 mb-2">
+      {t('contact.form.email')}
+    </label>
+    <input
+      type="email"
+      id="contact-email"
+      name="email"
+      required
+      class="w-full bg-neutral-900 border border-neutral-700 rounded-sm px-4 py-3 text-white text-sm placeholder-neutral-500 focus:outline-none focus:border-neutral-500 transition-colors"
+    />
+    <p class="field-error text-red-400 text-xs mt-1 hidden"></p>
+  </div>
+
+  <div>
+    <label for="contact-subject" class="block text-sm text-neutral-300 mb-2">
+      {t('contact.form.subject')}
+    </label>
+    <input
+      type="text"
+      id="contact-subject"
+      name="subject"
+      required
+      class="w-full bg-neutral-900 border border-neutral-700 rounded-sm px-4 py-3 text-white text-sm placeholder-neutral-500 focus:outline-none focus:border-neutral-500 transition-colors"
+    />
+    <p class="field-error text-red-400 text-xs mt-1 hidden"></p>
+  </div>
+
+  <div>
+    <label for="contact-message" class="block text-sm text-neutral-300 mb-2">
+      {t('contact.form.message')}
+    </label>
+    <textarea
+      id="contact-message"
+      name="message"
+      rows="5"
+      required
+      class="w-full bg-neutral-900 border border-neutral-700 rounded-sm px-4 py-3 text-white text-sm placeholder-neutral-500 focus:outline-none focus:border-neutral-500 transition-colors resize-none"
+    ></textarea>
+    <p class="field-error text-red-400 text-xs mt-1 hidden"></p>
+  </div>
+
+  <button
+    type="submit"
+    class="bg-white text-black px-8 py-3 text-sm font-medium rounded-sm hover:bg-neutral-200 transition-colors"
+  >
+    <span id="submit-text">{t('contact.form.submit')}</span>
+  </button>
+
+  <div id="form-success" class="hidden text-neutral-300 text-sm py-4">
+    {t('contact.form.success')}
+  </div>
+  <div id="form-error" class="hidden text-red-400 text-sm py-4">
+    {t('contact.form.error')}
+  </div>
+</form>
+
+<script>
+  function setupContactForm() {
+    const form = document.getElementById('contact-form') as HTMLFormElement | null;
+    if (!form) return;
+
+    const requiredMsg = form.dataset.requiredMsg ?? 'This field is required.';
+    const emailMsg = form.dataset.emailMsg ?? 'Please enter a valid email address.';
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      form.querySelectorAll('.field-error').forEach((el) => {
+        el.classList.add('hidden');
+        el.textContent = '';
+      });
+      document.getElementById('form-success')?.classList.add('hidden');
+      document.getElementById('form-error')?.classList.add('hidden');
+
+      let valid = true;
+      const fields = form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('[required]');
+      fields.forEach((field) => {
+        const error = field.parentElement?.querySelector('.field-error');
+        if (!field.value.trim()) {
+          if (error) {
+            error.textContent = requiredMsg;
+            error.classList.remove('hidden');
+          }
+          valid = false;
+        } else if (field.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value)) {
+          if (error) {
+            error.textContent = emailMsg;
+            error.classList.remove('hidden');
+          }
+          valid = false;
+        }
+      });
+
+      if (!valid) return;
+
+      // TODO: Wire up Cloudflare Workers email backend in Phase 4
+      const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+      submitBtn.disabled = true;
+      submitBtn.textContent = form.dataset.sendingMsg ?? 'Sending...';
+
+      setTimeout(() => {
+        form.reset();
+        submitBtn.disabled = false;
+        submitBtn.textContent = form.dataset.submitMsg ?? 'Send Message';
+        document.getElementById('form-success')?.classList.remove('hidden');
+      }, 800);
+    });
+  }
+
+  setupContactForm();
+  document.addEventListener('astro:after-swap', setupContactForm);
+</script>

@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ContactForm from '../../components/ContactForm.astro';
+import SocialLinks from '../../components/SocialLinks.astro';
+import { getTranslations, locales, type Locale } from '../../lib/i18n';
+import { getSiteSettings } from '../../lib/sanity';
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+const t = getTranslations(locale);
+const settings = await getSiteSettings();
+---
+
+<BaseLayout locale={locale} title={`${t('contact.title')} — ${t('site.title')}`}>
+  <section class="px-6 py-16 max-w-4xl mx-auto">
+    <div class="md:flex md:gap-16">
+      {/* Contact Info */}
+      <div class="md:w-1/3 mb-12 md:mb-0">
+        <h1 class="text-2xl font-light tracking-wider mb-8">
+          {t('contact.title')}
+        </h1>
+
+        {settings?.email && (
+          <div class="mb-6">
+            <p class="text-xs text-neutral-500 uppercase tracking-wider mb-1">{t('contact.email')}</p>
+            <a href={`mailto:${settings.email}`} class="text-sm text-neutral-300 hover:text-white transition-colors">
+              {settings.email}
+            </a>
+          </div>
+        )}
+
+        {settings?.phone && (
+          <div class="mb-6">
+            <p class="text-xs text-neutral-500 uppercase tracking-wider mb-1">{t('contact.phone')}</p>
+            <a href={`tel:${settings.phone}`} class="text-sm text-neutral-300 hover:text-white transition-colors">
+              {settings.phone}
+            </a>
+          </div>
+        )}
+
+        {/* Social Links */}
+        <div class="mt-8">
+          <p class="text-xs text-neutral-500 uppercase tracking-wider mb-3">{t('contact.followUs')}</p>
+          <SocialLinks
+            instagram={settings?.socialLinks?.instagram}
+            facebook={settings?.socialLinks?.facebook}
+            youtube={settings?.socialLinks?.youtube}
+          />
+        </div>
+      </div>
+
+      {/* Contact Form */}
+      <div class="md:flex-1">
+        <ContactForm locale={locale} />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
