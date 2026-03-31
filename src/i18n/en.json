@@ -1,0 +1,19 @@
+{
+  "site": {
+    "title": "Pordee Studio",
+    "tagline": "CAPTURE WHAT YOU FEEL",
+    "description": "Explore the architect's pure essence and deliver through the films."
+  },
+  "nav": {
+    "work": "Work",
+    "about": "About",
+    "blog": "Blog",
+    "contact": "Contact"
+  },
+  "footer": {
+    "copyright": "Copyright \u00a9 I WORK THEREFORE I AM CO.,LTD. Chiang Mai, Thailand"
+  },
+  "language": {
+    "toggle": "TH"
+  }
+}

@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getTranslations, locales, type Locale } from '../../lib/i18n';
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+const t = getTranslations(locale);
+---
+
+<BaseLayout locale={locale} title={`${t('site.title')} — ${t('site.tagline')}`} description={t('site.description')}>
+  <section class="min-h-[80vh] flex flex-col items-center justify-center px-6 text-center">
+    <h1 class="text-4xl md:text-6xl font-light tracking-wider mb-6">
+      {t('site.tagline')}
+    </h1>
+    <p class="text-neutral-400 text-lg max-w-lg">
+      {t('site.description')}
+    </p>
+  </section>
+</BaseLayout>

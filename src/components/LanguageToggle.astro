@@ -1,0 +1,21 @@
+---
+import { getTranslations } from '../lib/i18n';
+
+interface Props {
+  locale: string;
+}
+
+const { locale } = Astro.props;
+const t = getTranslations(locale);
+const targetLocale = locale === 'en' ? 'th' : 'en';
+const targetPath = Astro.url.pathname.startsWith(`/${locale}`)
+  ? Astro.url.pathname.replace(`/${locale}`, `/${targetLocale}`)
+  : `/${targetLocale}/`;
+---
+
+<a
+  href={targetPath}
+  class="text-sm text-neutral-400 hover:text-white transition-colors border border-neutral-700 px-2.5 py-1 rounded"
+>
+  {t('language.toggle')}
+</a>

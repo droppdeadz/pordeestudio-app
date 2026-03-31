@@ -1,0 +1,39 @@
+---
+import { getTranslations, getLocalizedPath } from '../lib/i18n';
+import LanguageToggle from './LanguageToggle.astro';
+
+interface Props {
+  locale: string;
+}
+
+const { locale } = Astro.props;
+const t = getTranslations(locale);
+---
+
+<header class="px-6 py-5 flex items-center justify-between">
+  <a href={getLocalizedPath('/', locale)}>
+    <img src="/logo.png" alt={t('site.title')} class="h-5" />
+  </a>
+
+  <nav class="hidden md:flex items-center gap-8">
+    <a href={getLocalizedPath('/work', locale)} class="text-sm text-neutral-300 hover:text-white transition-colors">
+      {t('nav.work')}
+    </a>
+    <a href={getLocalizedPath('/about', locale)} class="text-sm text-neutral-300 hover:text-white transition-colors">
+      {t('nav.about')}
+    </a>
+    <a href={getLocalizedPath('/blog', locale)} class="text-sm text-neutral-300 hover:text-white transition-colors">
+      {t('nav.blog')}
+    </a>
+    <a href={getLocalizedPath('/contact', locale)} class="text-sm text-neutral-300 hover:text-white transition-colors">
+      {t('nav.contact')}
+    </a>
+    <LanguageToggle locale={locale} />
+  </nav>
+
+  <button class="md:hidden text-white" aria-label="Menu">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16" />
+    </svg>
+  </button>
+</header>
