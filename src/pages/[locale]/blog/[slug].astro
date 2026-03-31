@@ -1,0 +1,104 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PortableTextRenderer from '../../../components/PortableTextRenderer';
+import { getTranslations, getLocalizedPath, locales, type Locale } from '../../../lib/i18n';
+import { getBlogPostsFull, urlFor } from '../../../lib/sanity';
+import type { BlogPost } from '../../../lib/sanity';
+
+export async function getStaticPaths() {
+  const posts = await getBlogPostsFull();
+  return locales.flatMap((locale) =>
+    posts.map((post) => ({
+      params: { locale, slug: post.slug.current },
+      props: { post },
+    }))
+  );
+}
+
+const locale = Astro.params.locale as Locale;
+const t = getTranslations(locale);
+const { post } = Astro.props as { post: BlogPost };
+
+const dateStr = new Date(post.date).toLocaleDateString(locale === 'th' ? 'th-TH' : 'en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const thumbnailSrc = post.thumbnail
+  ? urlFor(post.thumbnail).width(1200).auto('format').url()
+  : null;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.title[locale],
+  description: post.excerpt?.[locale] ?? '',
+  image: thumbnailSrc ?? undefined,
+  datePublished: post.date,
+  author: {
+    '@type': 'Organization',
+    name: 'Pordee Studio',
+  },
+  inLanguage: locale === 'th' ? 'th-TH' : 'en-US',
+};
+---
+
+<BaseLayout
+  locale={locale}
+  title={`${post.title[locale]} — ${t('site.title')}`}
+  description={post.excerpt?.[locale] ?? ''}
+  ogImage={thumbnailSrc ?? undefined}
+  ogType="article"
+  jsonLd={jsonLd}
+>
+  {/* Hero thumbnail */}
+  {thumbnailSrc && (
+    <section class="w-full max-w-5xl mx-auto px-6 pt-8">
+      <div class="aspect-[21/9] overflow-hidden rounded-sm bg-neutral-900">
+        <img
+          src={thumbnailSrc}
+          alt={post.title[locale]}
+          class="w-full h-full object-cover"
+          transition:name={`blog-thumb-${post.slug.current}`}
+        />
+      </div>
+    </section>
+  )}
+
+  {/* Post header */}
+  <article class="max-w-3xl mx-auto px-6 py-12">
+    <header class="mb-10">
+      <time class="text-sm text-neutral-500">{t('blog.publishedOn')} {dateStr}</time>
+      <h1 class="text-2xl md:text-3xl font-light tracking-wider mt-2">
+        {post.title[locale]}
+      </h1>
+      {post.tags && post.tags.length > 0 && (
+        <div class="flex gap-2 mt-4">
+          {post.tags.map((tag) => (
+            <span class="text-xs text-neutral-400 bg-neutral-900 px-3 py-1 rounded-sm">
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+    </header>
+
+    {/* Post body — rendered server-side, no client JS */}
+    {post.body?.[locale] && (
+      <div class="prose-dark">
+        <PortableTextRenderer value={post.body[locale] as unknown[]} />
+      </div>
+    )}
+
+    {/* Back link */}
+    <div class="mt-12">
+      <a
+        href={getLocalizedPath('/blog', locale)}
+        class="text-sm text-neutral-400 hover:text-white transition-colors"
+      >
+        &larr; {t('blog.backToBlog')}
+      </a>
+    </div>
+  </article>
+</BaseLayout>

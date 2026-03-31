@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import BlogPostCard from '../../../components/BlogPostCard.astro';
+import { getTranslations, locales, type Locale } from '../../../lib/i18n';
+import { getBlogPosts } from '../../../lib/sanity';
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+const t = getTranslations(locale);
+const posts = await getBlogPosts();
+---
+
+<BaseLayout locale={locale} title={`${t('blog.title')} — ${t('site.title')}`}>
+  <section class="px-6 py-16 max-w-6xl mx-auto">
+    <h1 class="text-2xl font-light tracking-wider mb-10">
+      {t('blog.title')}
+    </h1>
+
+    {posts.length > 0 ? (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {posts.map((post) => (
+          <BlogPostCard post={post} locale={locale} />
+        ))}
+      </div>
+    ) : (
+      <p class="text-neutral-400">{t('blog.noPosts')}</p>
+    )}
+  </section>
+</BaseLayout>
